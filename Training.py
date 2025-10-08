@@ -58,7 +58,7 @@ def train_with_memory_monitoring(model, dataloader, epochs=3, modelSelected='res
             'optimizer_state_dict': optimizer.state_dict(),
             'loss': avg_loss,
         }
-        torch.save(checkpoint, f'../data/models/checkpoint/{modelSelected}_checkpoint_epoch_{epoch}.pth')
+        torch.save(checkpoint, f'data/models/checkpoint/{modelSelected}_checkpoint_epoch_{epoch}.pth')
         
         # Clear memory setelah setiap epoch
         del checkpoint
