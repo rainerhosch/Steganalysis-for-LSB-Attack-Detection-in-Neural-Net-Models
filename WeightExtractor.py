@@ -7,7 +7,7 @@ import psutil
 import os
 from collections import OrderedDict
 
-class ResNetWeightExtractorX:
+class WeightExtractor:
     def __init__(self, model_path_or_state_dict):
         # Cek jika input adalah path file atau state_dict langsung
         if isinstance(model_path_or_state_dict, str):

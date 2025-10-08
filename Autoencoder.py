@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from torch.utils.data import Dataset
-class SteganalysisAutoencoder(nn.Module):
+class Autoencoder(nn.Module):
     def __init__(self, input_dim=256, encoding_dim=16):
         super().__init__()
         # Encoder yang sangat ringkas
