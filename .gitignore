@@ -7,8 +7,8 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-steganalysis_ai_v2/data
-steganalysis_ai_v2/models
+steganalysis_ai_v2/data/
+steganalysis_ai_v2/models/
 data/
 build/
 develop-eggs/
