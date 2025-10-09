@@ -110,7 +110,7 @@ class StegoGenerator:
             test_bit_positions = self.config.BIT_POSITIONS[:2]    # Hanya 2 posisi bit untuk test
 
             embedding_rates_val = self.config.PAYLOAD_SIZES
-            bit_positions_val = self.config.BIT_POSITIONS[:5]
+            bit_positions_val = self.config.BIT_POSITIONS[:10]
 
             for embedding_rate in embedding_rates_val:
                 for bit_position in bit_positions_val:

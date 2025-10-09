@@ -1,3 +1,4 @@
+import datetime as datetime
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
@@ -100,3 +101,56 @@ class StegoClassifier:
         """Load trained model"""
         model_path = os.path.join(config.MODEL_DIR, "trained", filename)
         return joblib.load(model_path)
+    
+    #Update
+    # Di src/classifier.py - modifikasi method train_and_evaluate
+    def train_and_evaluate_v2(self, features_df, feature_mask=None):
+        """Train and evaluate all models - version with feature names return"""
+        X, y = self.prepare_data(features_df)
+        
+        # Apply feature selection if mask provided
+        if feature_mask is not None:
+            X = X[:, feature_mask]
+            selected_features = [self.feature_names[i] for i in range(len(feature_mask)) if feature_mask[i]]
+            print(f"Using {len(selected_features)} selected features: {selected_features}")
+            
+            # Save selected feature names for later use
+            self.selected_feature_names = selected_features
+        else:
+            self.selected_feature_names = self.feature_names
+        
+        # Split data
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=config.TEST_SIZE, random_state=config.RANDOM_STATE, stratify=y
+        )
+        
+        results = {}
+        
+        for name, model in self.models.items():
+            print(f"\nTraining {name}...")
+            model.fit(X_train, y_train)
+            metrics = self.evaluate_model(model, X_test, y_test, name)
+            results[name] = metrics
+            
+            # Save the best model based on F1-score
+            if self.best_model is None or metrics['f1_score'] > results.get(self.best_model, {}).get('f1_score', 0):
+                self.best_model = name
+        
+        print(f"\nBest model: {self.best_model}")
+        
+        # Return 3 values: results, best_model, feature_names
+        return results, self.models[self.best_model], self.selected_feature_names
+
+    def save_model_v2(self, model, feature_names, filename="best_stego_classifier.pkl"):
+        """Save trained model and feature names"""
+        model_path = os.path.join(config.MODEL_DIR, "trained", filename)
+        os.makedirs(os.path.dirname(model_path), exist_ok=True)
+        
+        # Save both model and feature names
+        model_data = {
+            'model': model,
+            'feature_names': feature_names,
+            'timestamp': datetime.datetime.now().isoformat()
+        }
+        joblib.dump(model_data, model_path)
+        print(f"Model and feature names saved to {model_path}")
